@@ -73,7 +73,7 @@ public class IntListExercises {
         if (lst == null) {
 
             return false;
-            
+
         }
 
         boolean ElemIsPrime = false;
