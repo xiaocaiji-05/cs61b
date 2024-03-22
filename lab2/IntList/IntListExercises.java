@@ -71,7 +71,9 @@ public class IntListExercises {
     public static boolean squarePrimes(IntList lst) {
         // Base Case: we have reached the end of the list
         if (lst == null) {
+
             return false;
+            
         }
 
         boolean ElemIsPrime = false;
