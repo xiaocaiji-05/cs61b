@@ -12,11 +12,11 @@ public class ArrayDeque<T> {
     int capacity;
     public ArrayDeque()
     {
-        items = (T[]) new Object[9];
+        items = (T[]) new Object[8];
         size = 0;
         capacity = 8;
         front = 0;
-        end = 0;
+        end = -1;
     }
 
     public int size()
@@ -26,22 +26,14 @@ public class ArrayDeque<T> {
 
     public T get(int index)
     {
-        if(index >= size) return null;
-        int ptr = front;
-        while(index > 0)
-        {
-            ptr = plusOne(ptr, capacity);
-            index--;
-        }
-        return items[ptr];
+       if(index < 0|| index >= size) return null;
+       return items[(front + index) % capacity];
     }
     public void printDeque()
     {
-        int ptr = front;
-        while(ptr != end)
+        for(int i = 0 ; i < size; i++)
         {
-            System.out.print(items[ptr]+ " ");
-            ptr = plusOne(ptr, capacity);
+            System.out.print(items[(front + i) % capacity] + " ");
         }
     }
 
@@ -51,7 +43,7 @@ public class ArrayDeque<T> {
     }
     public void addFirst(T x)
     {
-        if(size == capacity - 1)
+        if(size == capacity)
         {
             grow();
         }
@@ -62,7 +54,7 @@ public class ArrayDeque<T> {
 
     public void addLast(T x)
     {
-        if(size == capacity - 1)
+        if(size == capacity)
         {
             grow();
         }
@@ -84,58 +76,45 @@ public class ArrayDeque<T> {
     private void grow()
     {
         T[] newArray = (T[]) new Object[capacity*2];
-        int ptr1 = front;
-        int ptr2 = capacity / 2;
-        while(ptr1 != end)
+        for(int i = 0; i < size; i++)
         {
-            newArray[ptr2] = items[ptr1];
-            ptr1 = plusOne(ptr1 , capacity);
-            ptr2 = plusOne(ptr2 ,capacity * 2);
+            newArray[i] = items[(front+i)%capacity];
         }
-        front = capacity / 2;
-        end = ptr2;
         items = newArray;
-        capacity = capacity * 2;
+        capacity = capacity* 2;
+        front = 0;
+        end = size - 1;
     }
 
     private void shrink()
     {
+        if(capacity <= 16 || size * 4 > capacity) return;
         T[] newArray = (T[]) new Object[capacity / 2];
-        int ptr1 = front;
-        int ptr2 =  capacity / 4;
-        while(ptr1 != end)
+        for(int i = 0; i < size; i++)
         {
-            newArray[ptr2] = items[ptr1];
-            ptr1 = plusOne(ptr1, capacity);
-            ptr2 = plusOne(ptr2, capacity / 2);
+            newArray[i] = items[(front+ i)% capacity];
         }
-        front = capacity / 4;
-        end = ptr2;
+        front = 0;
+        end = size - 1;
         capacity = capacity / 2;
     }
 
     public T removeFirst()
     {
-        if(capacity >= 16 && capacity / size >= 4)
-        {
-            shrink();
-        }
-        if(size == 0) return null;
+        if(isEmpty()) return null;
         T del = items[front];
         front = plusOne(front,capacity);
         size--;
+        if(size > 0 && size * 4 > capacity) shrink();
         return del;
     }
     public T removeLast()
     {
-        if(capacity >= 16 && capacity / size >= 4)
-        {
-            shrink();
-        }
-        if(size == 0) return null;
+        if(isEmpty()) return null;
         T del = items[end];
-        end = minusOne(end, capacity);
+        end = minusOne(end,capacity);
         size--;
+        if(size > 0 && size * 4 >capacity) shrink();
         return del;
     }
 
