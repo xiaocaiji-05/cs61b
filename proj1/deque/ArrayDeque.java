@@ -86,7 +86,7 @@ public class ArrayDeque<T> {
         T[] newArray = (T[]) new Object[capacity*2];
         int ptr1 = front;
         int ptr2 = capacity / 2;
-        while(front != end)
+        while(ptr1 != end)
         {
             newArray[ptr2] = items[ptr1];
             ptr1 = plusOne(ptr1 , capacity);
@@ -103,7 +103,7 @@ public class ArrayDeque<T> {
         T[] newArray = (T[]) new Object[capacity / 2];
         int ptr1 = front;
         int ptr2 =  capacity / 4;
-        while(front != end)
+        while(ptr1 != end)
         {
             newArray[ptr2] = items[ptr1];
             ptr1 = plusOne(ptr1, capacity);
