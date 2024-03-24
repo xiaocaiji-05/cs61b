@@ -12,11 +12,11 @@ public class ArrayDeque<T> {
     int capacity;
     public ArrayDeque()
     {
-        items = (T[]) new Object[8];
-        size = 0;
         capacity = 8;
+        items = (T[]) new Object[capacity];
+        size = 0;
         front = 0;
-        end = -1;
+        end = 0;
     }
 
     public int size()
@@ -49,6 +49,7 @@ public class ArrayDeque<T> {
         }
         front = minusOne(front, capacity);
         items[front] = x;
+        if(size == 0) end = front;
         size++;
     }
 
@@ -60,6 +61,7 @@ public class ArrayDeque<T> {
         }
         end = plusOne(end, capacity);
         items[end] = x;
+        if(size == 0) front = end;
         size++;
     }
 
@@ -69,8 +71,7 @@ public class ArrayDeque<T> {
     }
     private int plusOne(int x, int module)
     {
-        x %= module;
-        return x == module - 1 ? 0 : x + 1;
+        return (x + 1) % module;
     }
 
     private void grow()
@@ -104,8 +105,10 @@ public class ArrayDeque<T> {
     {
         if(isEmpty()) return null;
         T del = items[front];
+        items[front] = null;
         front = plusOne(front,capacity);
         size--;
+        if(size == 0) front = end = 0;
         if(size > 0 && size * 4 > capacity) shrink();
         return del;
     }
@@ -113,16 +116,10 @@ public class ArrayDeque<T> {
     {
         if(isEmpty()) return null;
         T del = items[end];
-        if(size == 1)
-        {
-            front = 0;
-            end = -1;
-        }
-        else
-        {
-            end = minusOne(end,capacity);
-        }
+        end = minusOne(end, capacity);
+        items[end] = null;
         size--;
+        if(size == 0) front = end = 0;
         if(size > 0 && size * 4 >capacity) shrink();
         return del;
     }
