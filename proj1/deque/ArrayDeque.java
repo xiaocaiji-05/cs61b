@@ -65,7 +65,7 @@ public class ArrayDeque<T> {
 
     private int minusOne(int x , int module )
     {
-        return x == 0 ? capacity - 1 : x - 1;
+        return (x + module - 1) % module;
     }
     private int plusOne(int x, int module)
     {
@@ -94,6 +94,7 @@ public class ArrayDeque<T> {
         {
             newArray[i] = items[(front+ i)% capacity];
         }
+        items = newArray;
         front = 0;
         end = size - 1;
         capacity = capacity / 2;
@@ -112,7 +113,15 @@ public class ArrayDeque<T> {
     {
         if(isEmpty()) return null;
         T del = items[end];
-        end = minusOne(end,capacity);
+        if(size == 1)
+        {
+            front = 0;
+            end = -1;
+        }
+        else
+        {
+            end = minusOne(end,capacity);
+        }
         size--;
         if(size > 0 && size * 4 >capacity) shrink();
         return del;
